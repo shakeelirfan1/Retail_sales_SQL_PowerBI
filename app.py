@@ -12,7 +12,7 @@ st.write("SQL + Power BI + Streamlit Project")
 # -----------------------------
 # Load Dataset
 # -----------------------------
-df = pd.read_csv("Sample -Superstore.csv",encoding="latin1")
+df = pd.read_csv("SampleSuperstore.csv",encoding="latin1")
 
 # -----------------------------
 # KPIs
