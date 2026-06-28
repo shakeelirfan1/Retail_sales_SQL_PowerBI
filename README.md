@@ -227,13 +227,8 @@ streamlit run app.py
 
 ---
 
-## Streamlit Application
-
-_Add your Streamlit dashboard screenshot here._
-
-```
-screenshots/streamlit_dashboard.png
-```
+## Live Demo(Streamlit)
+https://retailsalessqlpowerbi-jsfbtu9hpqebz2vcvckdjj.streamlit.app/
 
 ---
 
@@ -264,18 +259,7 @@ Through this project, I learned:
 
 # 👨‍💻 Author
 
-**Shakeel Irfan**
+**Shakeel Irfan S**
 
-Electronics and Communication Engineering Student
-
-**Skills**
-
-- SQL
-- MySQL
-- Power BI
-- Python
-- Streamlit
-- Pandas
-- Data Analytics
 
 ---
