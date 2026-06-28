@@ -1,26 +1,47 @@
 import streamlit as st
-import mysql.connector
 import pandas as pd
 
-# MySQL Connection
-conn = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="1234",
-    database="ecommerce"
-)
+# -----------------------------
+# Page Configuration
+# -----------------------------
+st.set_page_config(page_title="Retail Sales Dashboard", layout="wide")
 
-query = "SELECT * FROM orders"
+st.title("🛒 Retail Sales Dashboard")
+st.write("SQL + Power BI + Streamlit Project")
 
-df = pd.read_sql(query, conn)
+# -----------------------------
+# Load Dataset
+# -----------------------------
+df = pd.read_csv("Sample -Superstore.csv",encoding="latin1")
 
-st.title("Retail Sales Dashboard")
+# -----------------------------
+# KPIs
+# -----------------------------
+col1, col2, col3 = st.columns(3)
 
-st.write(df.head())
+with col1:
+    st.metric("Total Orders", len(df))
 
-st.metric("Total Orders", len(df))
-st.metric("Total Sales", round(df["Sales"].sum(),2))
-st.metric("Total Profit", round(df["Profit"].sum(),2))
+with col2:
+    st.metric("Total Sales", f"${df['Sales'].sum():,.2f}")
+
+with col3:
+    st.metric("Total Profit", f"${df['Profit'].sum():,.2f}")
+
+st.divider()
+
+# -----------------------------
+# Show Dataset
+# -----------------------------
+st.subheader("Orders Dataset")
+
+st.dataframe(df, use_container_width=True)
+
+st.divider()
+
+# -----------------------------
+# Add New Order (Demo)
+# -----------------------------
 st.header("➕ Add New Order")
 
 with st.form("add_order"):
@@ -35,7 +56,7 @@ with st.form("add_order"):
 
     ship_mode = st.selectbox(
         "Ship Mode",
-        ["First Class","Second Class","Standard Class","Same Day"]
+        ["First Class", "Second Class", "Standard Class", "Same Day"]
     )
 
     customer_id = st.text_input("Customer ID")
@@ -44,7 +65,7 @@ with st.form("add_order"):
 
     segment = st.selectbox(
         "Segment",
-        ["Consumer","Corporate","Home Office"]
+        ["Consumer", "Corporate", "Home Office"]
     )
 
     country = st.text_input("Country", value="United States")
@@ -57,14 +78,14 @@ with st.form("add_order"):
 
     region = st.selectbox(
         "Region",
-        ["East","West","Central","South"]
+        ["East", "West", "Central", "South"]
     )
 
     product_id = st.text_input("Product ID")
 
     category = st.selectbox(
         "Category",
-        ["Furniture","Office Supplies","Technology"]
+        ["Furniture", "Office Supplies", "Technology"]
     )
 
     sub_category = st.text_input("Sub Category")
@@ -75,52 +96,49 @@ with st.form("add_order"):
 
     quantity = st.number_input("Quantity", min_value=1)
 
-    discount = st.number_input("Discount", min_value=0.0, max_value=1.0)
+    discount = st.number_input(
+        "Discount",
+        min_value=0.0,
+        max_value=1.0
+    )
 
     profit = st.number_input("Profit")
 
     submit = st.form_submit_button("Add Order")
+
+# -----------------------------
+# Demo Add
+# -----------------------------
 if submit:
 
-    cursor = conn.cursor()
+    new_order = pd.DataFrame([{
+        "Row ID": row_id,
+        "Order ID": order_id,
+        "Order Date": str(order_date),
+        "Ship Date": str(ship_date),
+        "Ship Mode": ship_mode,
+        "Customer ID": customer_id,
+        "Customer Name": customer_name,
+        "Segment": segment,
+        "Country": country,
+        "City": city,
+        "State": state,
+        "Postal Code": postal_code,
+        "Region": region,
+        "Product ID": product_id,
+        "Category": category,
+        "Sub-Category": sub_category,
+        "Product Name": product_name,
+        "Sales": sales,
+        "Quantity": quantity,
+        "Discount": discount,
+        "Profit": profit
+    }])
 
-    sql = """
-    INSERT INTO orders
-    (`Row ID`,`Order ID`,`Order Date`,`Ship Date`,`Ship Mode`,
-    `Customer ID`,`Customer Name`,`Segment`,`Country`,`City`,
-    `State`,`Postal Code`,`Region`,`Product ID`,`Category`,
-    `Sub-Category`,`Product Name`,`Sales`,`Quantity`,
-    `Discount`,`Profit`)
-    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
-            %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
-    """
+    df = pd.concat([df, new_order], ignore_index=True)
 
-    values = (
-        row_id,
-        order_id,
-        str(order_date),
-        str(ship_date),
-        ship_mode,
-        customer_id,
-        customer_name,
-        segment,
-        country,
-        city,
-        state,
-        postal_code,
-        region,
-        product_id,
-        category,
-        sub_category,
-        product_name,
-        sales,
-        quantity,
-        discount,
-        profit
-    )
+    st.success("✅ Order Added Successfully (Demo Mode)")
 
-    cursor.execute(sql, values)
+    st.subheader("Updated Dataset")
 
-    conn.commit()
-
-    st.success("Order Added Successfully!")
+    st.dataframe(df.tail(), use_container_width=True)
