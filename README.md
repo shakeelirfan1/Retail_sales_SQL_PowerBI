@@ -217,10 +217,10 @@ streamlit run app.py
 
 ## Power BI Dashboard
 
-![Power BI Dashboard](screenshots\s1.png)
-![Power BI Dashboard](screenshots\s2.png)
-![Power BI Dashboard](screenshots\s3.png)
-![Power BI Dashboard](screenshots\s4.png)
+![Power BI Dashboard](screenshots/s1.png)
+![Power BI Dashboard](screenshots/s2.png)
+![Power BI Dashboard](screenshots/s3.png)
+![Power BI Dashboard](screenshots/s4.png)
 
 
 
